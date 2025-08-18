@@ -24,7 +24,7 @@ function App() {
 
     try {
 
-      const response = await fetch("/api/deals"); 
+      const response = await fetch("http://localhost:8080/search"); 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
