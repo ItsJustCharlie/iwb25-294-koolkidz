@@ -23,6 +23,7 @@ function App() {
     setShowResults(false);
 
     try {
+
       const response = await fetch("/api/deals"); 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
