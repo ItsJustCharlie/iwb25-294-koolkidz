@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Asus ROG Strix G18 14JVR – i9",
+    "price": "Rs. 227,500",
+    "link": "https://www.daraz.lk/products/asus-rog-strix-g18-14jvr-i9-i505418839.html",
+    "image_url": "https://img.drz.lazcdn.com/static/lk/p/64b81fd2dda6cf1b5240191a33457ebd.jpg_200x200q80.avif",
+    "platform": "Daraz"
+  },
+  {
+    "title": "Asus ROG Strix Hero Edition Gaming Laptop, 15.6” IPS-Type Full HD, Intel Core i7-7700HQ Processor, GeForce GTX 1060 6GB, 16GB DDR4, 256GB M.2 SSD RGB, Windows 10 Home",
+    "price": "Rs. 169,900",
+    "link": "https://www.daraz.lk/products/asus-rog-strix-hero-edition-gaming-laptop-156-ips-type-full-hd-intel-core-i7-7700hq-processor-geforce-gtx-1060-6gb-16gb-ddr4-256gb-m2-ssd-rgb-windows-10-home-i260468359.html",
+    "image_url": "https://img.drz.lazcdn.com/static/lk/p/75a9a51e071d61c2f59397b081f0933d.jpg_200x200q80.avif",
+    "platform": "Daraz"
+  },
+  {
+    "title": "ASUS TUF Gaming A15  FA506NFR-HN004 AMD RYZEN 7 7435HS, 8GB RAM 512GB SSD, 15.6\" FHD IPS 144Hz Display GeForce RTX 2050 4GB GPU English-RUSSIAN Keyboard Free dos  Graphite Black",
+    "price": "Rs. 232,999",
+    "link": "https://www.daraz.lk/products/asus-tuf-gaming-a15-fa506nfr-hn004-amd-ryzen-7-7435hs-8gb-ram-512gb-ssd-156-fhd-ips-144hz-display-geforce-rtx-2050-4gb-gpu-english-russian-keyboard-free-dos-graphite-black-i501159082.html",
+    "image_url": "https://img.drz.lazcdn.com/static/lk/p/55b3c01015135eb50fad74efb0689c61.jpg_200x200q80.avif",
+    "platform": "Daraz"
+  },
+  {
+    "title": "Asus TUF Core i7 -13th Gen +16GB|RTX 4060 Brandnew Laptops",
+    "price": "Rs 379,000",
+    "link": "https://ikman.lk/en/ads/sri-lanka?query=Asus%20TUF%20Core%20i7%20-13th%20Gen%20+16GB|RTX%204060%20Brandnew%20Laptops",
+    "image_url": "https://i.ikman-st.com/asus-tuf-core-i7-13th-gen-16gbrtx-4060-brandnew-laptops-for-sale-colombo/a15d3ee8-9dff-4e89-b59c-7e77cec0a1ca/160/120/cropped.webp",
+    "location": "N/A",
+    "platform": "ikman.lk"
+  },
+  {
+    "title": "ROG Zephyrus G14 Gaming Laptop (2024) GA403 RTX 4050 Ryzen AMD 7",
+    "price": "Rs 440,000",
+    "link": "https://ikman.lk/en/ads/sri-lanka?query=ROG%20Zephyrus%20G14%20Gaming%20Laptop%20(2024)%20GA403%20RTX%204050%20Ryzen%20AMD%207",
+    "image_url": "https://i.ikman-st.com/rog-zephyrus-g14-gaming-laptop-2024-ga403-rtx-4050-ryzen-amd-7-for-sale-gampaha/65427d69-d36c-4b87-b6b0-2a01f4d694ee/158/88/cropped.jpg",
+    "location": "N/A",
+    "platform": "ikman.lk"
+  },
+  {
+    "title": "Asus Vivobook i5-13th Gen",
+    "price": "Rs 157,000",
+    "link": "https://ikman.lk/en/ads/sri-lanka?query=Asus%20Vivobook%20i5-13th%20Gen",
+    "image_url": "data:image/png;base64,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",
+    "location": "N/A",
+    "platform": "ikman.lk"
+  },
+  {
+    "title": "Asus VivoBook X1504VA Intel Core i3 15.6\" FHD Windows 11 Laptop",
+    "price": "රු145,979.10",
+    "link": "https://www.wasi.lk/shop/asus-vivobook-15-15-6-inch-intel-core-i3-3-3-4-5ghz-1315u-processor-asus-vivobook-x1504va/",
+    "image_url": "https://www.wasi.lk/wp-content/uploads/2025/03/Asus-Vivobook-15-15.6-Inch-Intel-Core-i3-3.3-4.5GHz-1315U-Processor-AsA-433x325-1-246x186.jpg",
+    "availability": "Available",
+    "platform": "wasi.lk"
+  },
+  {
+    "title": "Asus VivoBook 15 X1504VAP Intel Core 5 15.6 Inch FHD Intel ( R ) Graphics Windows 11 Laptop",
+    "price": "රු204,119.10",
+    "link": "https://www.wasi.lk/shop/asus-vivobook-15-x1504vap-intel-core-5-15-6-inch-fhd-intel-r-graphics-windows-11-laptop/",
+    "image_url": "https://www.wasi.lk/wp-content/uploads/2025/04/Asus-VivoBook-15-X1504VAP-Intel-Core-5-15.6-Inch-FHD-Intel-R-Graphics-Windows-11-Laptop-433x325-1-246x186.jpg",
+    "availability": "Available",
+    "platform": "wasi.lk"
+  },
+  {
+    "title": "Asus ExpertBook P1503CVA Intel Core i5 15.6 Inch FHD Intel UHD Graphics DOS Laptop",
+    "price": "රු178,649.10",
+    "link": "https://www.wasi.lk/shop/asus-expertbook-p1503cva-intel-core-i5-15-6-inch-fhd-intel-uhd-graphics-dos-laptop/",
+    "image_url": "https://www.wasi.lk/wp-content/uploads/2025/04/Asus-ExpertBook-P1503CVA-Intel-Core-i5-15.6-Inch-FHD-Intel-UHD-Graphics-DOS-Laptop-433x325-1-246x186.jpg",
+    "availability": "Available",
+    "platform": "wasi.lk"
+  }
+]
