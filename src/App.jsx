@@ -18,20 +18,24 @@ function App() {
 
   const [deals, setDeals] = useState([]);
 
-  const handleFindDeals = () => {
+  const handleFindDeals = async () => {
     setIsLoading(true);
     setShowResults(false);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setDeals([
-        { site: "Daraz", price: 3200, sales: 100, link: "#" },
-        { site: "MyDeal.lk", price: 2950, sales: 200, link: "#" },
-        { site: "AliExpress", price: 2700, sales: 50, link: "#" },
-      ]);
-      setIsLoading(false);
+
+    try {
+      const response = await fetch("/api/deals"); 
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      setDeals(data);   
       setShowResults(true);
-    }, 8000); //loader time
+    } catch (err) {
+      console.error("Error fetching deals:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSaveSettings = (newSettings) => {
