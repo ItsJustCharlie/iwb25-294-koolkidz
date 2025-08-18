@@ -2,9 +2,9 @@ import DealCard from './DealCard';
 
 function DealList({ deals }) {
   return (
-    <div>
-      {deals.map((deal, index) => (
-        <DealCard key={index} deal={deal} />
+    <div className="deal-list-container">
+      {deals.map((deal) => (
+        <DealCard key={`${deal.site}-${deal.price}`} deal={deal} />
       ))}
     </div>
   );
