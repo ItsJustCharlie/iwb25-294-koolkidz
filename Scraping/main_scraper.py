@@ -86,11 +86,16 @@ def main():
             print(f"   Image: {product.get('image_url') or product.get('image', 'No image')}")
             print()
         
-        main_filename = f"search_results_{search_term.replace(' ', '_')}.json"
-        with open(main_filename, 'w', encoding='utf-8') as f:
+        main_filename = "data.json"
+        # Use absolute path to ensure it goes to the project root
+        import os
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        data_file_path = os.path.join(project_root, main_filename)
+        
+        with open(data_file_path, 'w', encoding='utf-8') as f:
             json.dump(found_products, f, indent=2, ensure_ascii=False)
         
-        print(f"Saved results to: {main_filename}")
+        print(f"Saved results to: {data_file_path}")
     
     else:
         print("No products found!")
@@ -107,12 +112,20 @@ if __name__ == "__main__":
         found_products = unified_scraper_three_platforms(query)
         
         if found_products:
-            # Save results
-            main_filename = f"search_results_{query.replace(' ', '_')}.json"
-            with open(main_filename, 'w', encoding='utf-8') as f:
-                json.dump(found_products, f, indent=2, ensure_ascii=False)
-            
-            print(f"Saved {len(found_products)} products to: {main_filename}")
+            # Save to the single data.json file (overwrite each time)
+            # Use absolute path to ensure it goes to the correct location
+            import os
+            project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            data_file_path = os.path.join(project_root, "data.json")
+            try:
+                with open(data_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(found_products, f, indent=2, ensure_ascii=False)
+                print(f"Saved {len(found_products)} products to: {data_file_path}")
+                # Print the first product for verification
+                if found_products:
+                    print("First product in saved file:", found_products[0])
+            except Exception as e:
+                print(f"Error writing to {data_file_path}: {e}")
         else:
             print("No products found!")
     else:

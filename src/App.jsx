@@ -18,18 +18,20 @@ function App() {
 
   const [deals, setDeals] = useState([]);
   const [currentProduct, setCurrentProduct] = useState("");
+  const [debugMsg, setDebugMsg] = useState("");
 
   const handleFindDeals = async () => {
+    setDebugMsg("Find Deals button clicked!");
     setIsLoading(true);
     setShowResults(false);
 
     try {
-      let productName = "sample laptop"; // Default fallback
-
+      let productName = "";
+      let extractedUrl = "";
+      setDebugMsg("Extracting product name from current tab URL...");
       // Check if we're in a Chrome extension environment
       if (typeof chrome !== 'undefined' && chrome.runtime) {
         try {
-          // Get current tab URL and extract product name
           const urlInfo = await new Promise((resolve, reject) => {
             chrome.runtime.sendMessage(
               { action: "getCurrentUrl" },
@@ -46,70 +48,52 @@ function App() {
               }
             );
           });
-
           if (urlInfo.success) {
-            productName = urlInfo.productName || "sample laptop";
+            productName = urlInfo.productName;
+            extractedUrl = urlInfo.url;
+            setDebugMsg(`Extracted from URL: ${extractedUrl}\nProduct name: ${productName}`);
           } else {
-            console.warn("Could not get URL from extension:", urlInfo.error);
+            setDebugMsg(`Failed to extract product name: ${urlInfo.error}`);
+            throw new Error(urlInfo.error);
           }
         } catch (err) {
-          console.warn("Extension URL extraction failed:", err.message);
-          // Continue with default product name
+          setDebugMsg(`Error extracting product name: ${err.message}`);
+          throw err;
         }
       } else {
-        console.warn("Not running in extension environment, using fallback");
+        setDebugMsg("Not running in extension environment, cannot extract product name from URL.");
+        throw new Error("Not running in extension environment");
       }
 
       setCurrentProduct(productName);
-
-      // First, try to get completed results
-      try {
-        const resultsResponse = await fetch(`http://localhost:8080/results?query=${encodeURIComponent(productName)}`);
-        if (resultsResponse.ok) {
-          const resultsData = await resultsResponse.json();
-          if (resultsData.status === "completed" && resultsData.products && resultsData.products.length > 0) {
-            // Transform scraped data to frontend format
-            const transformedDeals = resultsData.products.map(product => ({
-              site: product.platform || "Unknown",
-              price: parseFloat(product.price?.toString().replace(/[Rs\.,]/g, '') || '0'),
-              sales: product.sales || "0",
-              link: product.link || product.url || "#"
-            }));
-            
-            setDeals(transformedDeals);
-            setShowResults(true);
-            setIsLoading(false);
-            return;
-          }
-        }
-      } catch (err) {
-        console.log("No completed results yet, starting new search");
-      }
-
-      // If no completed results, start new search
-      const response = await fetch(`http://localhost:8080/search?query=${encodeURIComponent(productName)}`); 
+      // Always call /search endpoint to trigger the scraper
+      const url = `http://localhost:8080/search?q=${encodeURIComponent(productName)}`;
+      setDebugMsg(`Extracted from URL: ${extractedUrl}\nProduct name: ${productName}\nCalling API: ${url}`);
+      const response = await fetch(url);
       if (!response.ok) {
+        setDebugMsg(`HTTP error! status: ${response.status}`);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      setDebugMsg(`API response: ${JSON.stringify(data).slice(0, 200)}`);
 
-      // Handle the response format
       if (data.products && Array.isArray(data.products)) {
-        // Transform scraped data to match original format
         const transformedDeals = data.products.map(product => ({
-          site: product.platform || "Unknown",
+          site: product.platform || product.site || "Unknown",
           price: parseFloat(product.price?.toString().replace(/[Rs\.,]/g, '') || '0'),
-          sales: product.sales || "0",
-          link: product.link || product.url || "#"
+          sales: product.sales || product.availability || "Available",
+          link: product.link || product.url || "#",
+          name: product.name || product.title || "Unknown Product",
+          image: product.image_url || product.image || ""
         }));
-        setDeals(transformedDeals);   
+        setDeals(transformedDeals);
       } else {
         setDeals([]);
       }
       setShowResults(true);
     } catch (err) {
+      setDebugMsg(`Error: ${err.message}`);
       console.error("Error fetching deals:", err);
-      alert(`Error: ${err.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -127,6 +111,7 @@ function App() {
   return (
     <div className={`app-container ${isLoading ? 'loading-state' : ''}`}>
       <div className={`card ${isLoading ? 'loading-card' : ''}`}>
+        <div style={{color: 'red', fontSize: '0.9em', marginBottom: 8}}>{debugMsg}</div>
         {!isLoading ? (
           <>
             {!showResults && (

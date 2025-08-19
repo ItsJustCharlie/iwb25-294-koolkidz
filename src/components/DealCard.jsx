@@ -7,12 +7,26 @@ function DealCard({ deal }) {
   return (
     <div className="deal-card">
       <div className="deal-image-container">
-        <div className="deal-image-placeholder">
+        {deal.image && deal.image !== "" ? (
+          <img 
+            src={deal.image} 
+            alt={deal.name || deal.site} 
+            className="deal-image"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+        ) : null}
+        <div className="deal-image-placeholder" style={{display: deal.image && deal.image !== "" ? 'none' : 'flex'}}>
           <span>{deal.site.charAt(0)}</span>
         </div>
       </div>
       <div className="deal-content">
-        <h3 className="deal-title">{deal.site}</h3>
+        <h3 className="deal-title">{deal.name || deal.site}</h3>
+        <div className="deal-platform">
+          <span className="platform-label">From: {deal.site}</span>
+        </div>
         <div className="deal-stats">
           <div className="deal-stat">
             <span className="stat-label">Price</span>

@@ -13,7 +13,7 @@ import urllib.parse
 def scraper_ikman_fast(search_term, page_number=1):
     """Gets listings from ikman.lk - this site is pretty responsive"""
     
-    # Configure the browser for reasonable speed
+        # Configure the browser for reasonable speed
     browser_options = Options()
     browser_options.add_argument("--headless")  # Run in background
     browser_options.add_argument("--disable-blink-features=AutomationControlled")
@@ -31,6 +31,9 @@ def scraper_ikman_fast(search_term, page_number=1):
     browser_options.add_argument('--disable-web-security')
     browser_options.add_argument('--allow-running-insecure-content')
     browser_options.add_argument('--disable-features=VizDisplayCompositor')
+    # Add these to fix permissions issues
+    browser_options.add_argument('--disable-dev-shm-usage')
+    browser_options.add_argument('--remote-debugging-port=9223')
     
     # Speed things up a bit
     browser_options.add_argument("--disable-images")  # Skip loading images
@@ -39,9 +42,20 @@ def scraper_ikman_fast(search_term, page_number=1):
     browser_options.add_argument("--disable-extensions")
     
     try:
-        # Set up the browser
-        service = Service(ChromeDriverManager().install())
-        browser = webdriver.Chrome(service=service, options=browser_options)
+        # Set up the browser with better error handling
+        try:
+            service = Service(ChromeDriverManager().install())
+        except Exception as e:
+            print(f"ChromeDriverManager failed: {e}")
+            # Try without explicit service
+            service = None
+        
+        if service:
+            browser = webdriver.Chrome(service=service, options=browser_options)
+        else:
+            # Try with system Chrome
+            browser = webdriver.Chrome(options=browser_options)
+            
         browser.set_page_load_timeout(12)  # ikman usually loads pretty quick
         
         # A little trick to avoid detection

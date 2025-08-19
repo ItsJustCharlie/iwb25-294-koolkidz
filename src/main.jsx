@@ -1,3 +1,4 @@
+console.log("[Muffin Extension] main.jsx loaded and script running");
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';

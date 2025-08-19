@@ -1,11 +1,14 @@
 import ballerina/http;
 import ballerina/io;
+import ballerina/os;
 
 type Deal record {
     string site;
     decimal price;
     string sales;
     string link?;
+    string name?;
+    string image?;
 };
 
 type SearchResponse record {
@@ -24,20 +27,34 @@ type SearchResponse record {
 }
 service / on new http:Listener(8080) {
 
-    resource function get search(string query = "laptop") returns SearchResponse|error {
-        io:println("Search request for: " + query);
+    resource function get search(string q = "laptop") returns SearchResponse|error {
+        io:println("Search request for: " + q);
         
-        // For now, use a simple mapping based on query
-        string targetFile = "Scraping/search_results_asus_laptop.json";
+        // Run the Python scraper with the actual query
+        io:println("Starting scraper for: " + q);
         
-        // Basic query mapping - we'll improve this to be truly dynamic later
-        if query.includes("iphone") || query.includes("iPhone") {
-            targetFile = "Scraping/search_results_iphone_12.json";
-        } else if query.includes("barbie") || query.includes("doll") {
-            targetFile = "Scraping/search_results_barbie_doll.json";
-        } else if query.includes("toy") || query.includes("car") {
-            targetFile = "Scraping/search_results_toy_car.json";
+        // Execute Python scraper and wait for completion
+        os:Process|error result = os:exec({
+            value: "C:/Users/senmi/AppData/Local/Programs/Python/Python312/python.exe",
+            arguments: ["Scraping/main_scraper.py", q]
+        });
+        
+        if result is error {
+            io:println("Error running scraper: " + result.message());
+            // Still try to read existing data if scraper fails
+        } else {
+            io:println("Scraper process started");
+            // Wait for the process to complete
+            int|error waitResult = result.waitForExit();
+            if waitResult is error {
+                io:println("Error waiting for scraper: " + waitResult.message());
+            } else {
+                io:println("Scraper completed with exit code: " + waitResult.toString());
+            }
         }
+        
+        // Always read from the single data.json file (either fresh or existing)
+        string targetFile = "data.json";
         
         var readResult = io:fileReadString(targetFile);
         if readResult is string {
@@ -56,6 +73,30 @@ service / on new http:Listener(8080) {
                         json linkJson = item["link"];
                         if linkJson is string {
                             linkValue = linkJson;
+                        }
+                        
+                        // Get product name/title
+                        string productName = "Unknown Product";
+                        json titleJson = item["title"];
+                        if titleJson is string {
+                            productName = titleJson;
+                        } else {
+                            json nameJson = item["name"];
+                            if nameJson is string {
+                                productName = nameJson;
+                            }
+                        }
+                        
+                        // Get image URL
+                        string imageUrl = "";
+                        json imageJson = item["image_url"];
+                        if imageJson is string {
+                            imageUrl = imageJson;
+                        } else {
+                            json imgJson = item["image"];
+                            if imgJson is string {
+                                imageUrl = imgJson;
+                            }
                         }
                         
                         // Parse actual price from scraped data
@@ -91,7 +132,9 @@ service / on new http:Listener(8080) {
                             site: platformName,
                             price: priceValue,
                             sales: "Available",
-                            link: linkValue
+                            link: linkValue,
+                            name: productName,
+                            image: imageUrl
                         };
                         
                         // Categorize by platform
@@ -129,100 +172,117 @@ service / on new http:Listener(8080) {
                 }
                 
                 if topDeals.length() > 0 {
-                    io:println("Found " + topDeals.length().toString() + " deals for query: " + query);
+                    io:println("Found " + topDeals.length().toString() + " deals for query: " + q);
                     return {
                         status: "completed",
                         products: topDeals,
-                        message: "Found " + topDeals.length().toString() + " deals for: " + query
+                        message: "Found " + topDeals.length().toString() + " deals for: " + q
                     };
                 }
             }
         }
         
-        io:println("No data found, returning fallback for query: " + query);
+        io:println("No data found, returning fallback for query: " + q);
         // Return fallback data if no file found
         Deal[] fallbackDeals = [
-            {site: "Daraz", price: 200000.00, sales: "Available", link: "#"},
-            {site: "Ikman", price: 180000.00, sales: "Available", link: "#"},
-            {site: "Wasi", price: 190000.00, sales: "Available", link: "#"}
+            {site: "Daraz", price: 200000.00, sales: "Available", link: "#", name: "Sample Laptop", image: ""},
+            {site: "Ikman", price: 180000.00, sales: "Available", link: "#", name: "Sample Device", image: ""},
+            {site: "Wasi", price: 190000.00, sales: "Available", link: "#", name: "Sample Product", image: ""}
         ];
         return {
             status: "completed",
             products: fallbackDeals,
-            message: "Showing sample results for: " + query
+            message: "Showing sample results for: " + q
         };
     }
 
     resource function get results(string query = "laptop") returns SearchResponse|error {
         io:println("Results request for: " + query);
         
-        // Try to read the most recent scraped file
-        string[] possibleFiles = [
-            "Scraping/search_results_iphone_12.json",
-            "Scraping/search_results_asus_laptop.json", 
-            "Scraping/search_results_barbie_doll.json",
-            "Scraping/search_results_toy_car.json"
-        ];
-        
-        foreach string jsonFile in possibleFiles {
-            var readResult = io:fileReadString(jsonFile);
-            if readResult is string {
-                json|error jsonData = readResult.fromJsonString();
-                if jsonData is json[] {
-                    Deal[] deals = [];
-                    foreach json item in jsonData {
-                        if item is map<json> {
-                            string linkValue = "";
-                            json linkJson = item["link"];
-                            if linkJson is string {
-                                linkValue = linkJson;
-                            }
-                            
-                            // Parse actual price from scraped data
-                            decimal priceValue = 180000.0; // Default value
-                            json priceJson = item["price"];
-                            if priceJson is string {
-                                string priceStr = priceJson;
-                                // Parse price by extracting numbers
-                                string numericStr = "";
-                                foreach int i in 0 ..< priceStr.length() {
-                                    string char = priceStr.substring(i, i + 1);
-                                    if char >= "0" && char <= "9" {
-                                        numericStr = numericStr + char;
-                                    }
-                                }
-                                
-                                if numericStr.length() > 0 {
-                                    var parsedPrice = decimal:fromString(numericStr);
-                                    if parsedPrice is decimal {
-                                        priceValue = parsedPrice;
-                                    }
-                                }
-                            }
-                            
-                            string platformName = "Unknown";
-                            json platformJson = item["platform"];
-                            if platformJson is string {
-                                platformName = platformJson;
-                            }
-                            
-                            Deal deal = {
-                                site: platformName,
-                                price: priceValue,
-                                sales: "Available",
-                                link: linkValue
-                            };
-                            deals.push(deal);
+        // Always read from the single data.json file
+        var readResult = io:fileReadString("data.json");
+        if readResult is string {
+            json|error jsonData = readResult.fromJsonString();
+            if jsonData is json[] {
+                Deal[] deals = [];
+                foreach json item in jsonData {
+                    if item is map<json> {
+                        string linkValue = "";
+                        json linkJson = item["link"];
+                        if linkJson is string {
+                            linkValue = linkJson;
                         }
-                    }
-                    if deals.length() > 0 {
-                        io:println("Found " + deals.length().toString() + " deals from " + jsonFile);
-                        return {
-                            status: "completed",
-                            products: deals,
-                            message: "Found " + deals.length().toString() + " deals"
+                        
+                        // Get product name/title
+                        string productName = "Unknown Product";
+                        json titleJson = item["title"];
+                        if titleJson is string {
+                            productName = titleJson;
+                        } else {
+                            json nameJson = item["name"];
+                            if nameJson is string {
+                                productName = nameJson;
+                            }
+                        }
+                        
+                        // Get image URL
+                        string imageUrl = "";
+                        json imageJson = item["image_url"];
+                        if imageJson is string {
+                            imageUrl = imageJson;
+                        } else {
+                            json imgJson = item["image"];
+                            if imgJson is string {
+                                imageUrl = imgJson;
+                            }
+                        }
+                        
+                        // Parse actual price from scraped data
+                        decimal priceValue = 180000.0; // Default value
+                        json priceJson = item["price"];
+                        if priceJson is string {
+                            string priceStr = priceJson;
+                            // Parse price by extracting numbers
+                            string numericStr = "";
+                            foreach int i in 0 ..< priceStr.length() {
+                                string char = priceStr.substring(i, i + 1);
+                                if char >= "0" && char <= "9" {
+                                    numericStr = numericStr + char;
+                                }
+                            }
+                            
+                            if numericStr.length() > 0 {
+                                var parsedPrice = decimal:fromString(numericStr);
+                                if parsedPrice is decimal {
+                                    priceValue = parsedPrice;
+                                }
+                            }
+                        }
+                        
+                        string platformName = "Unknown";
+                        json platformJson = item["platform"];
+                        if platformJson is string {
+                            platformName = platformJson;
+                        }
+                        
+                        Deal deal = {
+                            site: platformName,
+                            price: priceValue,
+                            sales: "Available",
+                            link: linkValue,
+                            name: productName,
+                            image: imageUrl
                         };
+                        deals.push(deal);
                     }
+                }
+                if deals.length() > 0 {
+                    io:println("Found " + deals.length().toString() + " deals from data.json");
+                    return {
+                        status: "completed",
+                        products: deals,
+                        message: "Found " + deals.length().toString() + " deals"
+                    };
                 }
             }
         }

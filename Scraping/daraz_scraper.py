@@ -32,6 +32,9 @@ def scraper_selenium_fast(search_keyword, page_num=1):
     browser_options.add_argument('--disable-web-security')
     browser_options.add_argument('--allow-running-insecure-content')
     browser_options.add_argument('--disable-features=VizDisplayCompositor')
+    # Add these to fix permissions issues
+    browser_options.add_argument('--disable-dev-shm-usage')
+    browser_options.add_argument('--remote-debugging-port=9222')
     
     # Some speed optimizations (but keep JS for Daraz)
     browser_options.add_argument("--disable-images")  # Skip images to load faster
@@ -40,9 +43,20 @@ def scraper_selenium_fast(search_keyword, page_num=1):
     # Important: Don't disable JavaScript - Daraz needs it!
     
     try:
-        # Set up the browser
-        service = Service(ChromeDriverManager().install())
-        browser = webdriver.Chrome(service=service, options=browser_options)
+        # Set up the browser with better error handling
+        try:
+            service = Service(ChromeDriverManager().install())
+        except Exception as e:
+            print(f"ChromeDriverManager failed: {e}")
+            # Try without explicit service
+            service = None
+        
+        if service:
+            browser = webdriver.Chrome(service=service, options=browser_options)
+        else:
+            # Try with system Chrome
+            browser = webdriver.Chrome(options=browser_options)
+            
         browser.set_page_load_timeout(30)  # Daraz can be slow sometimes
         
         # Some stealth tricks to avoid detection
