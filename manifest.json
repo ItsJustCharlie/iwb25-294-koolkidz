@@ -1,4 +1,5 @@
 {
+
   "manifest_version": 3,
   "name": "Muffin - Price Checker",
   "version": "1.0",
@@ -20,3 +21,16 @@
     "128": "icon.png"
   }
 }
+=======
+  "name": "Muffins Deal Finder",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "Find e-commerce deals based on the current product URL.",
+  "action": {
+    "default_title": "Muffins",
+    "default_popup": "index.html"
+  },
+  "permissions": ["tabs"],
+  "host_permissions": ["<all_urls>"]
+}
+
