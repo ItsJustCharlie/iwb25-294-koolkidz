@@ -11,6 +11,15 @@
       "128": "icon.png"
     }
   },
-  "permissions": ["activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.daraz.lk/*", "*://*.ikman.lk/*", "*://*.wasi.lk/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "permissions": ["activeTab", "tabs"],
   "host_permissions": ["<all_urls>"]
 }

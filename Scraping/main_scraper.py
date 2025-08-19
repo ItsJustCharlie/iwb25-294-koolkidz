@@ -96,4 +96,25 @@ def main():
         print("No products found!")
 
 if __name__ == "__main__":
-    main()
+    import sys
+    
+    if len(sys.argv) > 1:
+        # Get query from command line argument
+        query = " ".join(sys.argv[1:])
+        print(f"Scraping for: {query}")
+        
+        # Run the scraper
+        found_products = unified_scraper_three_platforms(query)
+        
+        if found_products:
+            # Save results
+            main_filename = f"search_results_{query.replace(' ', '_')}.json"
+            with open(main_filename, 'w', encoding='utf-8') as f:
+                json.dump(found_products, f, indent=2, ensure_ascii=False)
+            
+            print(f"Saved {len(found_products)} products to: {main_filename}")
+        else:
+            print("No products found!")
+    else:
+        # Original main function for interactive use
+        main()

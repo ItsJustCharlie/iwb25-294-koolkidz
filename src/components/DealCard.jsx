@@ -1,4 +1,9 @@
 function DealCard({ deal }) {
+  // Ensure price is a number for display
+  const price = typeof deal.price === 'string' ? 
+    parseFloat(deal.price.replace(/[Rs\.,]/g, '') || '0') : 
+    deal.price;
+  
   return (
     <div className="deal-card">
       <div className="deal-image-container">
@@ -11,7 +16,7 @@ function DealCard({ deal }) {
         <div className="deal-stats">
           <div className="deal-stat">
             <span className="stat-label">Price</span>
-            <span className="stat-value">Rs. {deal.price.toLocaleString()}</span>
+            <span className="stat-value">Rs. {price.toLocaleString()}</span>
           </div>
           <div className="deal-stat">
             <span className="stat-label">Sales</span>
@@ -19,7 +24,7 @@ function DealCard({ deal }) {
           </div>
         </div>
         <a 
-          href={deal.link} 
+          href={deal.link || "#"} 
           className="deal-link"
           target="_blank" 
           rel="noopener noreferrer"
