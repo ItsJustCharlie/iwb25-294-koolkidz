@@ -1,4 +1,27 @@
 {
+
+  "manifest_version": 3,
+  "name": "Muffin - Price Checker",
+  "version": "1.0",
+  "description": "Find better prices for the products you're viewing.",
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {},
+  "web_accessible_resources": [
+    {
+      "resources": ["react-bundle.js", "style.css"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
+=======
   "name": "Muffins Deal Finder",
   "version": "1.0.0",
   "manifest_version": 3,
@@ -10,3 +33,4 @@
   "permissions": ["tabs"],
   "host_permissions": ["<all_urls>"]
 }
+
