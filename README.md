@@ -1,14 +1,14 @@
 <h1>iwb25-294-koolkidz</h1>
-# Muffins E-commerce Platform 🧁
-A comprehensive e-commerce platform that aggregates product deals from multiple online marketplaces. Built with a modern tech stack featuring Ballerina backend, React frontend, and Python web scrapers.
+<h1>Muffins browser extension </h1>
+
+A comprehensive extension that aggregates product deals from multiple online marketplaces. Built with a modern tech stack featuring Ballerina backend, React frontend, and Python web scrapers.
 
 # Features
     Multi-platform Product Aggregation: Scrapes and combines deals from Daraz, ikman.lk, and Wasi.lk
     Real-time Deal Search: Fast, concurrent scraping across multiple platforms
     Modern React Frontend: Clean, responsive UI with loading states and animations
     RESTful API: Ballerina-powered backend with CORS support
-    Smart Sorting: Sort deals by price, rating, or popularity
-    Product Details: Display prices, discounts, ratings, and product images
+    Product Details: Display prices and product images
     Direct Links: Quick access to original product pages
 
 # Architecture
