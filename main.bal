@@ -38,13 +38,7 @@ service / on new http:Listener(8080) {
             value: "python",
             arguments: ["Scraping/main_scraper.py", q]
         });
-            if result.error is os:Error {
-            io:println("Error running Python:", result.error.message());
-            } else {
-                io:println("Scraper stdout: ", result.stdout);
-                io:println("Scraper stderr: ", result.stderr);
-            }
-
+          
         
         if result is error {
             io:println("Error running scraper: " + result.message());
