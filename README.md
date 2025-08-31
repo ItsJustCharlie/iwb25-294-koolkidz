@@ -1,5 +1,3 @@
-# iwb25-294-koolkidz
-
 # Muffins E-commerce Platform 🧁
 A comprehensive e-commerce platform that aggregates product deals from multiple online marketplaces. Built with a modern tech stack featuring Ballerina backend, React frontend, and Python web scrapers.
 
