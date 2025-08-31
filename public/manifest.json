@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Muffin - Price Checker",
+  "version": "1.0",
+  "description": "Find better prices for the products you're viewing.",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.daraz.lk/*", "*://*.ikman.lk/*", "*://*.wasi.lk/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "permissions": ["activeTab", "tabs"],
+  "host_permissions": ["<all_urls>"]
+}

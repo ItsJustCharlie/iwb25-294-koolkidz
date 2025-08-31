@@ -1,0 +1,50 @@
+.loader-container {
+  position: relative;
+  width: 100px;
+  height: 280px;
+}
+
+.waves {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  width: calc(11.6px * 3 + 16px * 2);
+  height: 220px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.wave {
+  width: 11.6px;
+  height: 220px;
+}
+
+.wave path {
+  stroke: #ffffff;
+  stroke-width: 11.6px;
+  stroke-linecap: round;
+  fill: none;
+  stroke-dasharray: 90;
+  stroke-dashoffset: 0;
+  animation: waveMove 1.8s linear infinite;
+}
+
+.muffin-loader {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  top: 150px;
+  transform: translateX(-50%);
+  width: 60px;
+  height: auto;
+  z-index: 10;
+}
+
+@keyframes waveMove {
+  to {
+    stroke-dashoffset: 180;
+  }
+}
